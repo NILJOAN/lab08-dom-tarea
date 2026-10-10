@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tarea - Registro de notas (v1)</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 640px; margin: 30px auto; padding: 0 12px; }
+    h1 { font-size: 1.5rem; }
+    section { border: 1px solid #ccc; border-radius: 6px; padding: 12px; margin-bottom: 16px; }
+    ul { padding-left: 0; list-style: none; }
+    li { padding: 8px; border-bottom: 1px solid #eee; display: flex; gap: 8px; align-items: center; }
+    li span.info { flex: 1; }
+    .aprobado { color: #1e8449; }
+    .desaprobado { color: #c0392b; }
+    .error { color: #c0392b; }
+    .ok { color: #1e8449; }
+    input { padding: 6px; margin-right: 6px; }
+    button { padding: 6px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1 id="titulo">Registro de notas</h1>
+
+  <section>
+    <h2>Estudiantes</h2>
+    <ul id="lista"></ul>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
