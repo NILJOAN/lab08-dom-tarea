@@ -1,0 +1,135 @@
+<!-- SOLO PARA LEER O COPIAR: no abrir en el navegador, son 3 paginas completas una tras otra. -->
+
+<!-- ======================================================================
+     VERSION 1: solo DOM  (archivo original: v1_index.html)
+     ====================================================================== -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tarea - Registro de notas (v1)</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 640px; margin: 30px auto; padding: 0 12px; }
+    h1 { font-size: 1.5rem; }
+    section { border: 1px solid #ccc; border-radius: 6px; padding: 12px; margin-bottom: 16px; }
+    ul { padding-left: 0; list-style: none; }
+    li { padding: 8px; border-bottom: 1px solid #eee; display: flex; gap: 8px; align-items: center; }
+    li span.info { flex: 1; }
+    .aprobado { color: #1e8449; }
+    .desaprobado { color: #c0392b; }
+    .error { color: #c0392b; }
+    .ok { color: #1e8449; }
+    input { padding: 6px; margin-right: 6px; }
+    button { padding: 6px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1 id="titulo">Registro de notas</h1>
+
+  <section>
+    <h2>Estudiantes</h2>
+    <ul id="lista"></ul>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+<!-- ======================================================================
+     VERSION 2: con eventos  (archivo original: v2_index.html)
+     ====================================================================== -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tarea - Registro de notas (v2)</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 640px; margin: 30px auto; padding: 0 12px; }
+    h1 { font-size: 1.5rem; }
+    section { border: 1px solid #ccc; border-radius: 6px; padding: 12px; margin-bottom: 16px; }
+    ul { padding-left: 0; list-style: none; }
+    li { padding: 8px; border-bottom: 1px solid #eee; display: flex; gap: 8px; align-items: center; }
+    li span.info { flex: 1; }
+    .aprobado { color: #1e8449; }
+    .desaprobado { color: #c0392b; }
+    .error { color: #c0392b; }
+    .ok { color: #1e8449; }
+    input { padding: 6px; margin-right: 6px; }
+    button { padding: 6px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1 id="titulo">Registro de notas</h1>
+
+  <section>
+    <h2>Agregar nota</h2>
+    <form id="formNota">
+      <input id="nombre" type="text" placeholder="Nombre del estudiante">
+      <input id="nota" type="number" step="0.5" placeholder="Nota (0 a 20)">
+      <button type="submit">Agregar</button>
+    </form>
+    <p id="mensaje"></p>
+  </section>
+
+  <section>
+    <h2>Estudiantes</h2>
+    <input id="buscador" type="text" placeholder="Buscar por nombre">
+    <ul id="lista"></ul>
+    <p id="resumen"></p>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+<!-- ======================================================================
+     VERSION 3: con clases y objetos  (archivo original: v3_index.html)
+     ====================================================================== -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tarea - Registro de notas (v3)</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 640px; margin: 30px auto; padding: 0 12px; }
+    h1 { font-size: 1.5rem; }
+    section { border: 1px solid #ccc; border-radius: 6px; padding: 12px; margin-bottom: 16px; }
+    ul { padding-left: 0; list-style: none; }
+    li { padding: 8px; border-bottom: 1px solid #eee; display: flex; gap: 8px; align-items: center; }
+    li span.info { flex: 1; }
+    .aprobado { color: #1e8449; }
+    .desaprobado { color: #c0392b; }
+    .error { color: #c0392b; }
+    .ok { color: #1e8449; }
+    input { padding: 6px; margin-right: 6px; }
+    button { padding: 6px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1 id="titulo">Registro de notas</h1>
+
+  <section>
+    <h2>Agregar nota</h2>
+    <form id="formNota">
+      <input id="nombre" type="text" placeholder="Nombre del estudiante">
+      <input id="nota" type="number" step="0.5" placeholder="Nota (0 a 20)">
+      <button type="submit">Agregar</button>
+    </form>
+    <p id="mensaje"></p>
+  </section>
+
+  <section>
+    <h2>Estudiantes</h2>
+    <input id="buscador" type="text" placeholder="Buscar por nombre">
+    <ul id="lista"></ul>
+    <p id="resumen"></p>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
