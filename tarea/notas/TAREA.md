@@ -2,99 +2,58 @@
 
 ## Componente elegido
 
-Elegi un **registro de notas de estudiantes que calcula el promedio**. Se escribe el nombre y una nota entre 0 y 20; si el estudiante ya existe se le agrega la nota, si no se crea. Cada fila muestra sus notas, el promedio y si esta Aprobado (promedio de 13 o mas) o Desaprobado, y tiene un boton para borrarla. Hay un buscador por nombre y un resumen con el promedio del salon.
+Elegi un **registro de notas de estudiantes** con escala de 0 a 20. El usuario escribe un nombre y una nota; la pagina guarda las notas de cada estudiante, calcula su promedio y dice si esta **Aprobado** (promedio de 13 o mas) o **Desaprobado**. Tambien se puede buscar por nombre y borrar un estudiante.
+
+- La nota minima para aprobar esta en la constante `NOTA_MINIMA`, asi que se puede cambiar en un solo lugar.
+- Si se escribe un nombre que ya existe (sin importar mayusculas o minusculas, por ejemplo "ana" y "Ana"), la nota se suma al mismo estudiante en lugar de crear otra fila.
+- Los datos viven solo en memoria: al recargar la pagina la lista se vacia, porque no use almacenamiento del navegador.
+- Para mostrar lo que escribe el usuario use `textContent` y no `innerHTML`, de modo que si alguien escribe etiquetas HTML como nombre se ven como texto y no se ejecutan.
 
 ## Version 1: solo DOM
 
-**Que agregue:** una pagina con una lista vacia y un `app.js` que recorre un arreglo de tres estudiantes escritos a mano, calcula el promedio de cada uno con una funcion y crea con `createElement` un `li` por estudiante. Con `classList` le pone la clase `aprobado` o `desaprobado` segun el promedio.
+**Que agregue:** una pagina con un titulo y una lista vacia (`#lista`). Los estudiantes estan escritos en el codigo como un arreglo fijo. JavaScript recorre el arreglo, calcula el promedio de cada uno y crea con `createElement` un `li` con su informacion y su estado (Aprobado o Desaprobado). Tambien cambie el color del titulo con `style.color` y use `classList.add` para pintar el estado.
 
-**Por que:** queria asegurarme primero de que sabia encontrar elementos y dibujar datos en la pagina antes de agregar interaccion.
+**Por que:** queria comprobar primero lo mas basico, que JavaScript pueda dibujar la lista desde cero sin escribir los `li` a mano en el HTML. Si esto no funcionaba, no tenia sentido seguir.
 
-**Que cambio en el comportamiento:** la lista no esta escrita en el HTML: la crea JavaScript al cargar, con los promedios (Ana 15.33, Luis 11.00, Marta 17.00) y colores segun el estado. Todavia no reacciona a nada: para cambiar un dato hay que editar `app.js`.
+**Que cambio en el comportamiento:** al abrir la pagina aparecen tres estudiantes (Ana, Luis y Carla) con su promedio y su estado. La pagina no reacciona a nada: para cambiar los datos hay que editar el codigo.
 
 ```js
-// Tarea - Version 1: solo DOM (sin eventos y sin clases)
+// Version 1: solo DOM. Los datos son fijos y JavaScript dibuja la lista con createElement.
+
+const NOTA_MINIMA = 13; // promedio minimo para aprobar (escala 0 a 20)
+
+const estudiantes = [
+  { nombre: "Ana", notas: [15, 14, 17] },
+  { nombre: "Luis", notas: [10, 12, 9] },
+  { nombre: "Carla", notas: [18, 16] }
+];
+
 const titulo = document.querySelector("#titulo");
 const lista = document.querySelector("#lista");
 
-titulo.textContent = "Registro de notas";
+titulo.style.color = "navy";
 
-// Datos fijos escritos a mano
-const estudiantes = [
-  { nombre: "Ana", notas: [15, 17, 14] },
-  { nombre: "Luis", notas: [10, 12, 11] },
-  { nombre: "Marta", notas: [18, 16] },
-];
-
-function promedio(notas) {
+estudiantes.forEach((est) => {
+  // promedio calculado a mano con un ciclo
   let suma = 0;
-  notas.forEach((n) => {
+  est.notas.forEach((n) => {
     suma = suma + n;
   });
-  return suma / notas.length;
-}
-
-estudiantes.forEach((e) => {
-  const prom = promedio(e.notas);
+  const promedio = suma / est.notas.length;
+  const aprobado = promedio >= NOTA_MINIMA;
 
   const li = document.createElement("li");
-  li.textContent = e.nombre + " - notas: " + e.notas.join(", ") + " - promedio: " + prom.toFixed(2);
 
-  if (prom >= 13) {
-    li.classList.add("aprobado");
-  } else {
-    li.classList.add("desaprobado");
-  }
+  const info = document.createElement("span");
+  info.classList.add("info");
+  info.textContent =
+    est.nombre + " | notas: " + est.notas.join(", ") + " | promedio: " + promedio.toFixed(2);
+  li.appendChild(info);
 
-  lista.appendChild(li);
-});
-# Tarea: Mi componente interactivo
-
-## Componente elegido
-
-Elegi un **registro de notas de estudiantes que calcula el promedio**. Se escribe el nombre y una nota entre 0 y 20; si el estudiante ya existe se le agrega la nota, si no se crea. Cada fila muestra sus notas, el promedio y si esta Aprobado (promedio de 13 o mas) o Desaprobado, y tiene un boton para borrarla. Hay un buscador por nombre y un resumen con el promedio del salon.
-
-## Version 1: solo DOM
-
-**Que agregue:** una pagina con una lista vacia y un `app.js` que recorre un arreglo de tres estudiantes escritos a mano, calcula el promedio de cada uno con una funcion y crea con `createElement` un `li` por estudiante. Con `classList` le pone la clase `aprobado` o `desaprobado` segun el promedio.
-
-**Por que:** queria asegurarme primero de que sabia encontrar elementos y dibujar datos en la pagina antes de agregar interaccion.
-
-**Que cambio en el comportamiento:** la lista no esta escrita en el HTML: la crea JavaScript al cargar, con los promedios (Ana 15.33, Luis 11.00, Marta 17.00) y colores segun el estado. Todavia no reacciona a nada: para cambiar un dato hay que editar `app.js`.
-
-```js
-// Tarea - Version 1: solo DOM (sin eventos y sin clases)
-const titulo = document.querySelector("#titulo");
-const lista = document.querySelector("#lista");
-
-titulo.textContent = "Registro de notas";
-
-// Datos fijos escritos a mano
-const estudiantes = [
-  { nombre: "Ana", notas: [15, 17, 14] },
-  { nombre: "Luis", notas: [10, 12, 11] },
-  { nombre: "Marta", notas: [18, 16] },
-];
-
-function promedio(notas) {
-  let suma = 0;
-  notas.forEach((n) => {
-    suma = suma + n;
-  });
-  return suma / notas.length;
-}
-
-estudiantes.forEach((e) => {
-  const prom = promedio(e.notas);
-
-  const li = document.createElement("li");
-  li.textContent = e.nombre + " - notas: " + e.notas.join(", ") + " - promedio: " + prom.toFixed(2);
-
-  if (prom >= 13) {
-    li.classList.add("aprobado");
-  } else {
-    li.classList.add("desaprobado");
-  }
+  const estado = document.createElement("span");
+  estado.textContent = aprobado ? "Aprobado" : "Desaprobado";
+  estado.classList.add(aprobado ? "aprobado" : "desaprobado");
+  li.appendChild(estado);
 
   lista.appendChild(li);
 });
@@ -102,29 +61,109 @@ estudiantes.forEach((e) => {
 
 ## Version 2: con eventos
 
-**Que agregue:** un formulario para ingresar nombre y nota (evento `submit`), un buscador (evento `input`) y un boton Borrar en cada fila (evento `click`). Agregue validacion con mensajes dentro de la pagina: nombre de al menos 2 letras y nota entre 0 y 20. Los datos siguen en un arreglo de objetos literales y funciones sueltas. Tambien agregue la funcion `dibujar()`, que vuelve a pintar la lista cada vez que algo cambia.
+**Que agregue:** un formulario para agregar notas (evento `submit`), un campo de busqueda (evento `input`) y un boton **Borrar** en cada fila (evento `click`). Agregue `preventDefault()` para que el formulario no recargue la pagina, y la validacion del nombre y de la nota con un mensaje visible en la pagina (`#mensaje`), sin `alert`. Los datos pasaron a ser una lista que empieza vacia y se llena con lo que escribe el usuario. Como la lista cambia, cree la funcion `dibujar()` que borra la lista y la vuelve a dibujar.
 
-**Por que:** la tarea pide que la interfaz responda al usuario. Use `preventDefault()` para que el formulario no recargue la pagina y `textContent` para mostrar lo escrito como texto y no como HTML.
+**Por que:** una pagina que solo muestra datos fijos no sirve como registro. Con los eventos el usuario es quien agrega, filtra y elimina. Revise la nota con `trim()` antes de convertirla porque `Number("")` da `0` y un campo vacio pasaria como un 0 valido.
 
-**Que cambio en el comportamiento:** ahora la lista empieza vacia y el usuario la llena. Una nota invalida muestra un mensaje en rojo y no se guarda; escribir en el buscador filtra al instante; Borrar elimina la fila y actualiza el promedio del salon.
+**Que cambio en el comportamiento:** la pagina empieza vacia y reacciona al usuario sin recargar. Si falta el nombre o la nota esta fuera de 0 a 20, aparece un mensaje en rojo. Si todo esta bien aparece en verde, la fila se agrega y el formulario se limpia. El buscador filtra mientras se escribe y Borrar elimina la fila.
 
 ```js
-// Evento submit: agregar nota con validacion
+// Version 2: con eventos. El usuario agrega, busca y borra. Los datos son objetos simples.
+
+const NOTA_MINIMA = 13; // promedio minimo para aprobar (escala 0 a 20)
+
+let estudiantes = []; // cada elemento: { nombre: "Ana", notas: [15, 14] }
+
+const formNota = document.querySelector("#formNota");
+const inputNombre = document.querySelector("#nombre");
+const inputNota = document.querySelector("#nota");
+const mensaje = document.querySelector("#mensaje");
+const buscador = document.querySelector("#buscador");
+const lista = document.querySelector("#lista");
+const resumen = document.querySelector("#resumen");
+
+function promedio(notas) {
+  let suma = 0;
+  notas.forEach((n) => {
+    suma = suma + n;
+  });
+  return suma / notas.length;
+}
+
+function mostrarMensaje(texto, tipo) {
+  mensaje.textContent = texto;
+  mensaje.classList.remove("ok", "error");
+  mensaje.classList.add(tipo);
+}
+
+function dibujar() {
+  lista.textContent = "";
+
+  const clave = buscador.value.trim().toLowerCase();
+  const visibles = estudiantes.filter((e) => e.nombre.toLowerCase().includes(clave));
+
+  visibles.forEach((est) => {
+    const prom = promedio(est.notas);
+    const aprobado = prom >= NOTA_MINIMA;
+
+    const li = document.createElement("li");
+
+    const info = document.createElement("span");
+    info.classList.add("info");
+    info.textContent =
+      est.nombre + " | notas: " + est.notas.join(", ") + " | promedio: " + prom.toFixed(2);
+    li.appendChild(info);
+
+    const estado = document.createElement("span");
+    estado.textContent = aprobado ? "Aprobado" : "Desaprobado";
+    estado.classList.add(aprobado ? "aprobado" : "desaprobado");
+    li.appendChild(estado);
+
+    const btnBorrar = document.createElement("button");
+    btnBorrar.type = "button";
+    btnBorrar.textContent = "Borrar";
+    btnBorrar.addEventListener("click", () => {
+      estudiantes = estudiantes.filter((e) => e !== est);
+      mostrarMensaje(est.nombre + " fue eliminado.", "ok");
+      dibujar();
+    });
+    li.appendChild(btnBorrar);
+
+    lista.appendChild(li);
+  });
+
+  if (estudiantes.length === 0) {
+    resumen.textContent = "Aun no hay estudiantes registrados.";
+  } else if (visibles.length === 0) {
+    resumen.textContent = "Ningun estudiante coincide con la busqueda.";
+  } else {
+    resumen.textContent =
+      "Mostrando " + visibles.length + " de " + estudiantes.length + " estudiantes.";
+  }
+}
+
 formNota.addEventListener("submit", (evento) => {
   evento.preventDefault();
 
   const nombre = inputNombre.value.trim();
-  const nota = Number(inputNota.value);
+  const textoNota = inputNota.value.trim();
 
-  if (nombre.length < 2) {
-    mostrarMensaje("Error: escribe un nombre de al menos 2 letras.", "error");
+  if (nombre === "") {
+    mostrarMensaje("Escribe el nombre del estudiante.", "error");
     return;
   }
-  if (inputNota.value === "" || Number.isNaN(nota) || nota < 0 || nota > 20) {
-    mostrarMensaje("Error: la nota debe ser un numero entre 0 y 20.", "error");
+  if (textoNota === "") {
+    mostrarMensaje("Escribe una nota.", "error");
     return;
   }
 
+  const nota = Number(textoNota);
+  if (Number.isNaN(nota) || nota < 0 || nota > 20) {
+    mostrarMensaje("La nota debe ser un numero entre 0 y 20.", "error");
+    return;
+  }
+
+  // si el nombre ya existe (sin importar mayusculas), se suma la nota
   const existente = estudiantes.find((e) => e.nombre.toLowerCase() === nombre.toLowerCase());
   if (existente) {
     existente.notas.push(nota);
@@ -137,142 +176,29 @@ formNota.addEventListener("submit", (evento) => {
   dibujar();
 });
 
-// Evento input: filtrar mientras se escribe
 buscador.addEventListener("input", dibujar);
 
 dibujar();
-```
-
-```js
-// Dentro de dibujar(): el boton Borrar de cada fila
-      const btnBorrar = document.createElement("button");
-      btnBorrar.textContent = "Borrar";
-      btnBorrar.addEventListener("click", () => {
-        const pos = estudiantes.indexOf(e);
-        estudiantes.splice(pos, 1);
-        dibujar();
-      });
-# Tarea: Mi componente interactivo
-
-## Componente elegido
-
-Elegi un **registro de notas de estudiantes que calcula el promedio**. Se escribe el nombre y una nota entre 0 y 20; si el estudiante ya existe se le agrega la nota, si no se crea. Cada fila muestra sus notas, el promedio y si esta Aprobado (promedio de 13 o mas) o Desaprobado, y tiene un boton para borrarla. Hay un buscador por nombre y un resumen con el promedio del salon.
-
-## Version 1: solo DOM
-
-**Que agregue:** una pagina con una lista vacia y un `app.js` que recorre un arreglo de tres estudiantes escritos a mano, calcula el promedio de cada uno con una funcion y crea con `createElement` un `li` por estudiante. Con `classList` le pone la clase `aprobado` o `desaprobado` segun el promedio.
-
-**Por que:** queria asegurarme primero de que sabia encontrar elementos y dibujar datos en la pagina antes de agregar interaccion.
-
-**Que cambio en el comportamiento:** la lista no esta escrita en el HTML: la crea JavaScript al cargar, con los promedios (Ana 15.33, Luis 11.00, Marta 17.00) y colores segun el estado. Todavia no reacciona a nada: para cambiar un dato hay que editar `app.js`.
-
-```js
-// Tarea - Version 1: solo DOM (sin eventos y sin clases)
-const titulo = document.querySelector("#titulo");
-const lista = document.querySelector("#lista");
-
-titulo.textContent = "Registro de notas";
-
-// Datos fijos escritos a mano
-const estudiantes = [
-  { nombre: "Ana", notas: [15, 17, 14] },
-  { nombre: "Luis", notas: [10, 12, 11] },
-  { nombre: "Marta", notas: [18, 16] },
-];
-
-function promedio(notas) {
-  let suma = 0;
-  notas.forEach((n) => {
-    suma = suma + n;
-  });
-  return suma / notas.length;
-}
-
-estudiantes.forEach((e) => {
-  const prom = promedio(e.notas);
-
-  const li = document.createElement("li");
-  li.textContent = e.nombre + " - notas: " + e.notas.join(", ") + " - promedio: " + prom.toFixed(2);
-
-  if (prom >= 13) {
-    li.classList.add("aprobado");
-  } else {
-    li.classList.add("desaprobado");
-  }
-
-  lista.appendChild(li);
-});
-```
-
-## Version 2: con eventos
-
-**Que agregue:** un formulario para ingresar nombre y nota (evento `submit`), un buscador (evento `input`) y un boton Borrar en cada fila (evento `click`). Agregue validacion con mensajes dentro de la pagina: nombre de al menos 2 letras y nota entre 0 y 20. Los datos siguen en un arreglo de objetos literales y funciones sueltas. Tambien agregue la funcion `dibujar()`, que vuelve a pintar la lista cada vez que algo cambia.
-
-**Por que:** la tarea pide que la interfaz responda al usuario. Use `preventDefault()` para que el formulario no recargue la pagina y `textContent` para mostrar lo escrito como texto y no como HTML.
-
-**Que cambio en el comportamiento:** ahora la lista empieza vacia y el usuario la llena. Una nota invalida muestra un mensaje en rojo y no se guarda; escribir en el buscador filtra al instante; Borrar elimina la fila y actualiza el promedio del salon.
-
-```js
-// Evento submit: agregar nota con validacion
-formNota.addEventListener("submit", (evento) => {
-  evento.preventDefault();
-
-  const nombre = inputNombre.value.trim();
-  const nota = Number(inputNota.value);
-
-  if (nombre.length < 2) {
-    mostrarMensaje("Error: escribe un nombre de al menos 2 letras.", "error");
-    return;
-  }
-  if (inputNota.value === "" || Number.isNaN(nota) || nota < 0 || nota > 20) {
-    mostrarMensaje("Error: la nota debe ser un numero entre 0 y 20.", "error");
-    return;
-  }
-
-  const existente = estudiantes.find((e) => e.nombre.toLowerCase() === nombre.toLowerCase());
-  if (existente) {
-    existente.notas.push(nota);
-  } else {
-    estudiantes.push({ nombre: nombre, notas: [nota] });
-  }
-
-  mostrarMensaje("Nota " + nota + " agregada a " + nombre + ".", "ok");
-  formNota.reset();
-  dibujar();
-});
-
-// Evento input: filtrar mientras se escribe
-buscador.addEventListener("input", dibujar);
-
-dibujar();
-```
-
-```js
-// Dentro de dibujar(): el boton Borrar de cada fila
-      const btnBorrar = document.createElement("button");
-      btnBorrar.textContent = "Borrar";
-      btnBorrar.addEventListener("click", () => {
-        const pos = estudiantes.indexOf(e);
-        estudiantes.splice(pos, 1);
-        dibujar();
-      });
 ```
 
 ## Version 3: con clases y objetos
 
-**Que agregue:** las clases `Estudiante` (atributos `nombre` y `notas`; metodos `agregarNota`, `promedio`, `estado` y `descripcion`) y `RegistroNotas` (atributo `estudiantes`; metodos `buscarPorNombre`, `agregarNota`, `eliminar`, `filtrar` y `promedioGeneral`). Movi a las clases los calculos que en la version 2 eran funciones sueltas.
+**Que agregue:** dos clases. `Estudiante` guarda el nombre y la lista de notas, y sabe calcular su `promedio()` y si esta `aprobado()`. `RegistroNotas` guarda a todos los estudiantes y sabe `agregarNota()`, `buscarExacto()`, `eliminar()` y `filtrar()`. El codigo de los eventos y de `dibujar()` ahora llama a estos metodos en lugar de calcular todo por su cuenta.
 
-**Por que:** en la version 2 los datos y las reglas (como el 13 para aprobar) estaban repartidos por todo el archivo. Con clases cada cosa vive donde corresponde y `dibujar()` solo se encarga de mostrar.
+**Por que:** en la version 2 el calculo del promedio, la regla de aprobacion y la busqueda del estudiante estaban mezclados con el codigo del DOM. Al moverlos a las clases, cada cosa queda en su lugar y la regla de aprobacion esta en un solo sitio.
 
-**Que cambio en el comportamiento:** para el usuario la pagina se ve y funciona igual; lo que cambio es el codigo: ahora los eventos llaman a metodos como `registro.agregarNota(nombre, nota)` o `registro.eliminar(estudiante)`, y cambiar una regla se hace en un solo lugar.
+**Que cambio en el comportamiento:** la pagina se ve y funciona igual que la version 2. El cambio esta en el codigo: esta mas ordenado y es mas facil de modificar o ampliar.
 
 ```js
-const NOTA_MINIMA = 13;
+// Tarea Lab 08: registro de notas (DOM + eventos + objetos)
 
+const NOTA_MINIMA = 13; // promedio minimo para aprobar (escala 0 a 20)
+
+// ---------- Clases ----------
 class Estudiante {
-  constructor(nombre, notas = []) {
+  constructor(nombre) {
     this.nombre = nombre;
-    this.notas = notas;
+    this.notas = [];
   }
 
   agregarNota(nota) {
@@ -290,16 +216,8 @@ class Estudiante {
     return suma / this.notas.length;
   }
 
-  estado() {
-    return this.promedio() >= NOTA_MINIMA ? "Aprobado" : "Desaprobado";
-  }
-
-  descripcion() {
-    return (
-      this.nombre + " - notas: " + this.notas.join(", ") +
-      " - promedio: " + this.promedio().toFixed(2) +
-      " - " + this.estado()
-    );
+  aprobado() {
+    return this.promedio() >= NOTA_MINIMA;
   }
 }
 
@@ -308,18 +226,19 @@ class RegistroNotas {
     this.estudiantes = [];
   }
 
-  buscarPorNombre(nombre) {
-    return this.estudiantes.find((e) => e.nombre.toLowerCase() === nombre.toLowerCase());
+  // Busca sin importar mayusculas: "ana" y "Ana" son la misma persona
+  buscarExacto(nombre) {
+    const clave = nombre.toLowerCase();
+    return this.estudiantes.find((e) => e.nombre.toLowerCase() === clave);
   }
 
   agregarNota(nombre, nota) {
-    let estudiante = this.buscarPorNombre(nombre);
+    let estudiante = this.buscarExacto(nombre);
     if (!estudiante) {
       estudiante = new Estudiante(nombre);
       this.estudiantes.push(estudiante);
     }
     estudiante.agregarNota(nota);
-    return estudiante;
   }
 
   eliminar(estudiante) {
@@ -327,37 +246,99 @@ class RegistroNotas {
   }
 
   filtrar(texto) {
-    const t = texto.trim().toLowerCase();
-    return this.estudiantes.filter((e) => e.nombre.toLowerCase().includes(t));
-  }
-
-  promedioGeneral() {
-    if (this.estudiantes.length === 0) {
-      return 0;
-    }
-    let suma = 0;
-    this.estudiantes.forEach((e) => {
-      suma = suma + e.promedio();
-    });
-    return suma / this.estudiantes.length;
+    const clave = texto.trim().toLowerCase();
+    return this.estudiantes.filter((e) =>
+      e.nombre.toLowerCase().includes(clave)
+    );
   }
 }
-```
 
-```js
-// ---- Eventos ----
+// ---------- Elementos del DOM ----------
+const formNota = document.querySelector("#formNota");
+const inputNombre = document.querySelector("#nombre");
+const inputNota = document.querySelector("#nota");
+const mensaje = document.querySelector("#mensaje");
+const buscador = document.querySelector("#buscador");
+const lista = document.querySelector("#lista");
+const resumen = document.querySelector("#resumen");
+
+const registro = new RegistroNotas();
+
+// ---------- Funciones ----------
+function mostrarMensaje(texto, tipo) {
+  mensaje.textContent = texto;
+  mensaje.classList.remove("ok", "error");
+  mensaje.classList.add(tipo);
+}
+
+function dibujar() {
+  lista.textContent = ""; // vacia la lista antes de volver a dibujarla
+
+  const visibles = registro.filtrar(buscador.value);
+
+  visibles.forEach((estudiante) => {
+    const li = document.createElement("li");
+
+    const info = document.createElement("span");
+    info.classList.add("info");
+    // textContent: no ejecuta HTML escrito por el usuario
+    info.textContent =
+      estudiante.nombre +
+      " | notas: " + estudiante.notas.join(", ") +
+      " | promedio: " + estudiante.promedio().toFixed(2);
+    li.appendChild(info);
+
+    const estado = document.createElement("span");
+    estado.textContent = estudiante.aprobado() ? "Aprobado" : "Desaprobado";
+    estado.classList.add(estudiante.aprobado() ? "aprobado" : "desaprobado");
+    li.appendChild(estado);
+
+    const btnBorrar = document.createElement("button");
+    btnBorrar.type = "button";
+    btnBorrar.textContent = "Borrar";
+    // el evento se registra aqui porque el boton se crea aqui
+    btnBorrar.addEventListener("click", () => {
+      registro.eliminar(estudiante);
+      mostrarMensaje(estudiante.nombre + " fue eliminado.", "ok");
+      dibujar();
+    });
+    li.appendChild(btnBorrar);
+
+    lista.appendChild(li);
+  });
+
+  if (registro.estudiantes.length === 0) {
+    resumen.textContent = "Aun no hay estudiantes registrados.";
+  } else if (visibles.length === 0) {
+    resumen.textContent = "Ningun estudiante coincide con la busqueda.";
+  } else {
+    resumen.textContent =
+      "Mostrando " + visibles.length + " de " + registro.estudiantes.length + " estudiantes.";
+  }
+}
+
+// ---------- Eventos ----------
 formNota.addEventListener("submit", (evento) => {
   evento.preventDefault();
 
   const nombre = inputNombre.value.trim();
-  const nota = Number(inputNota.value);
+  const textoNota = inputNota.value.trim();
 
-  if (nombre.length < 2) {
-    mostrarMensaje("Error: escribe un nombre de al menos 2 letras.", "error");
+  if (nombre === "") {
+    mostrarMensaje("Escribe el nombre del estudiante.", "error");
     return;
   }
-  if (inputNota.value === "" || Number.isNaN(nota) || nota < 0 || nota > 20) {
-    mostrarMensaje("Error: la nota debe ser un numero entre 0 y 20.", "error");
+
+  // Number("") da 0, por eso se revisa primero que el campo no este vacio
+  if (textoNota === "") {
+    mostrarMensaje("Escribe una nota.", "error");
+    return;
+  }
+
+  const nota = Number(textoNota);
+
+  if (Number.isNaN(nota) || nota < 0 || nota > 20) {
+    mostrarMensaje("La nota debe ser un numero entre 0 y 20.", "error");
     return;
   }
 
@@ -374,30 +355,37 @@ dibujar();
 
 ## Donde uso DOM, eventos y objetos
 
-| Parte | Donde esta en `tarea/app.js` (version final) | Para que sirve |
-|-------|-----------------------------------------------|----------------|
-| DOM | `document.querySelector` (lineas 79 a 85) | Encontrar el formulario, los campos, el buscador, la lista y los mensajes |
-| DOM | `createElement` de `li`, `span` y `button` (lineas 98, 101 y 105) | Crear cada fila de estudiante |
-| DOM | `replaceChildren()` (linea 95), `textContent` y `classList` (lineas 90, 99 y 103) | Borrar la lista antes de volver a dibujarla, escribir textos y cambiar el color segun el estado |
-| Eventos | `formNota.addEventListener("submit", ...)` (linea 127) | Agregar la nota y validar los datos |
-| Eventos | `btnBorrar.addEventListener("click", ...)` (linea 107) | Borrar un estudiante |
-| Eventos | `buscador.addEventListener("input", dibujar)` (linea 148) | Filtrar mientras se escribe |
-| Objetos | `class Estudiante` (linea 4) y `class RegistroNotas` (linea 38) | Guardar los datos y los calculos |
-| Objetos | `const registro = new RegistroNotas();` (linea 87) y `registro.agregarNota(...)`, `registro.eliminar(...)`, `registro.filtrar(...)` (lineas 142, 108 y 97) | Usar los objetos desde los eventos y al dibujar |
+Las lineas corresponden al `app.js` final (version 3).
+
+| Parte | Lineas del codigo final | Para que sirve |
+|-------|-------------------------|----------------|
+| DOM: seleccion de elementos con `querySelector` | 65 a 71 | Encuentra el formulario, los campos, el mensaje, el buscador, la lista y el resumen |
+| DOM: `createElement`, `appendChild`, `classList`, `textContent` | 82 a 126 (`dibujar`) | Crea las filas (`li`, `span`, boton Borrar) y las muestra con su clase de color |
+| DOM: mensaje visible | 76 a 80 (`mostrarMensaje`) | Muestra en la pagina el error o la confirmacion, sin `alert` |
+| Evento `submit` | 129 a 157 | Valida los datos, agrega la nota y redibuja la lista |
+| Evento `click` | dentro de `dibujar`, boton Borrar | Elimina al estudiante de la fila y redibuja |
+| Evento `input` | 159 | Filtra la lista mientras el usuario escribe |
+| Objeto: clase `Estudiante` | 6 a 30 | Guarda nombre y notas; calcula `promedio()` y `aprobado()` |
+| Objeto: clase `RegistroNotas` | 32 a 62 | Guarda los estudiantes; busca, agrega, elimina y filtra |
+| Objeto: instancia `registro` | linea 73 (`new RegistroNotas()`) y `new Estudiante` en `agregarNota` | Es el objeto con el que trabaja toda la pagina |
 
 ## Pruebas realizadas
 
-| # | Accion | Resultado esperado | Resultado obtenido | Cumple |
-|---|--------|--------------------|--------------------|--------|
-| 1 | Agregar nombre "Ana" con nota 15 | Aparece una fila de Ana con promedio 15.00 y estado Aprobado | Fila "Ana - notas: 15 - promedio: 15.00 - Aprobado" y mensaje verde "Nota 15 agregada a Ana." | Si |
-| 2 | Agregar nombre "ana" (en minuscula) con nota 11 | No crea otra fila: suma la nota a Ana y el promedio pasa a 13.00 | Una sola fila: "Ana - notas: 15, 11 - promedio: 13.00 - Aprobado" | Si |
-| 3 | Agregar "Luis" con nota 10 | Fila de Luis en rojo como Desaprobado y promedio del salon 11.50 | Fila de Luis "Desaprobado" en rojo y resumen "Estudiantes: 2 - Promedio del salon: 11.50" | Si |
-| 4 | Agregar "Marta" con nota 25 | Mensaje de error en la pagina y no se agrega nada | "Error: la nota debe ser un numero entre 0 y 20." en rojo; la lista no cambio | Si |
-| 5 | Dejar el nombre vacio con nota 12 | Mensaje de error de nombre | "Error: escribe un nombre de al menos 2 letras." y no se agrego nada | Si |
-| 6 | Escribir "mar" en el buscador (con Ana, Luis, Marta y Mario) | Solo se ven Marta y Mario | Se muestran solo las filas de Marta y Mario | Si |
-| 7 | Pulsar Borrar en la fila de Luis | La fila desaparece y el promedio del salon se actualiza | La fila desaparecio y el resumen paso a "Estudiantes: 3 - Promedio del salon: 15.00" | Si |
-| 8 | Escribir `<b>x</b>` como nombre con nota 12 | El texto se muestra tal cual, sin interpretarse como HTML | Se ve `<b>x</b> - notas: 12 - ...` como texto y no aparece ningun elemento `b` | Si |
+| N.° | Accion | Resultado esperado | Resultado obtenido | Cumple |
+|-----|--------|--------------------|--------------------|--------|
+| 1 | Dejar el nombre vacio y enviar | Mensaje en rojo "Escribe el nombre del estudiante." | Aparecio el mensaje en rojo y no se agrego nada | Si |
+| 2 | Nombre "Ana" y nota vacia | Mensaje en rojo "Escribe una nota." (no debe contar como 0) | Aparecio el mensaje en rojo y no se agrego nada | Si |
+| 3 | Nombre "Ana" y nota 25 | Mensaje en rojo: la nota debe estar entre 0 y 20 | Aparecio el mensaje en rojo y no se agrego nada | Si |
+| 4 | Nombre "Ana" y nota 14 | Mensaje en verde y fila nueva con promedio 14.00 Aprobado | Aparecio la fila "Ana", promedio 14.00, Aprobado | Si |
+| 5 | Agregar "ana" con nota 10 despues de "Ana" | Se suma al mismo estudiante: notas 14, 10 y promedio 12.00 Desaprobado | Una sola fila, notas 14, 10, promedio 12.00, Desaprobado | Si |
+| 6 | Escribir "lu" en el buscador con Ana y Luis registrados | Solo se muestra Luis | Solo aparecio la fila de Luis | Si |
+| 7 | Pulsar Borrar en una fila | La fila desaparece y aparece el mensaje de eliminado | La fila desaparecio y salio el mensaje en verde | Si |
+| 8 | Escribir `<b>x</b>` como nombre con nota 20 | El nombre se ve como texto, sin negrita | Se vio el texto `<b>x</b>` tal cual | Si |
 
 ## Por que disene asi mi clase
 
-Disene `Estudiante` con los atributos `nombre` y `notas` porque son lo unico que necesito guardar: el promedio y el estado no los guardo, los calculo con los metodos `promedio()` y `estado()` cada vez que se piden, asi nunca quedan desactualizados cuando se agrega una nota. El metodo `agregarNota()` es la unica forma de cambiar la lista de notas, y `descripcion()` arma el texto de la fila para que `dibujar()` no tenga que conocer el formato. Cree aparte `RegistroNotas` porque la coleccion de estudiantes tiene sus propias acciones (buscar sin distinguir mayusculas, agregar, eliminar, filtrar y sacar el promedio general) y no pertenecen a un solo estudiante. La nota minima para aprobar (13) la deje en la constante `NOTA_MINIMA` para poder cambiarla en un solo lugar.
+Disene `Estudiante` con los atributos `nombre` y `notas` porque son los dos datos que realmente definen a un estudiante en mi registro, y guarde las notas como una lista y no como un solo numero para poder agregar varias a la misma persona y calcular el promedio. Sus metodos `promedio()` y `aprobado()` estan dentro de la clase porque son lo que un estudiante sabe hacer con sus propios datos, y asi la regla de aprobacion (`NOTA_MINIMA`) queda en un solo sitio y no repetida en el codigo de la pagina. Cree `RegistroNotas` aparte, con el atributo `estudiantes` y los metodos `agregarNota()`, `buscarExacto()`, `eliminar()` y `filtrar()`, porque administrar el conjunto (agregar sin duplicar nombres, borrar y buscar) es otra responsabilidad distinta de la de un solo estudiante. Con esta separacion el codigo del DOM solo se encarga de mostrar y de escuchar eventos, y no necesita saber como se calculan los promedios.
+
+## Limitaciones
+
+La solucion vuelve a dibujar toda la lista cada vez que algo cambia. Es simple y suficiente para pocos estudiantes, pero con muchos datos seria mejor actualizar solo la fila afectada. Los datos no se guardan al recargar; una mejora seria usar `localStorage`.
