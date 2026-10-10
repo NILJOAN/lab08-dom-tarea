@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tarea - Registro de notas (v1)</title>
+  <title>Tarea - Registro de notas (v2)</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 640px; margin: 30px auto; padding: 0 12px; }
     h1 { font-size: 1.5rem; }
@@ -23,8 +23,20 @@
   <h1 id="titulo">Registro de notas</h1>
 
   <section>
+    <h2>Agregar nota</h2>
+    <form id="formNota">
+      <input id="nombre" type="text" placeholder="Nombre del estudiante">
+      <input id="nota" type="number" step="0.5" placeholder="Nota (0 a 20)">
+      <button type="submit">Agregar</button>
+    </form>
+    <p id="mensaje" aria-live="polite"></p>
+  </section>
+
+  <section>
     <h2>Estudiantes</h2>
+    <input id="buscador" type="text" placeholder="Buscar por nombre">
     <ul id="lista"></ul>
+    <p id="resumen"></p>
   </section>
 
   <script src="app.js"></script>
